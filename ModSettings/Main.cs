@@ -12,7 +12,7 @@ using ModSettings.GUI;
 namespace ModSettings
 {
     [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
-    [BepInDependency(Jotunn.Main.ModGuid)]
+    [BepInDependency(Jotunn.Main.ModGuid, "2.7.2")]
     internal class Main : BaseUnityPlugin
     {
         public const string PluginGUID = "com.jotunn.modsettings";
