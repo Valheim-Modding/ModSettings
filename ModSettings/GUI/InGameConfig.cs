@@ -346,7 +346,6 @@ namespace ModSettings.GUI
             if (ZNet.instance != null && ZNet.instance.IsClientInstance())
             {
                 ReflectionHelper.InvokePrivate(SynchronizationManager.Instance, "CacheConfigurationValues");
-                //SynchronizationManager.Instance.CacheConfigurationValues();
             }
 
             // Iterate over all plugins (including Jotunn itself)
@@ -392,7 +391,7 @@ namespace ModSettings.GUI
             {
                 settings.AddSection(mod.Key, kv.Key);
 
-                foreach (var entry in kv.OrderBy(x =>
+                foreach (var entry in kv.OrderByDescending(x =>
                 {
                     var attributes = new ConfigurationManagerAttributes();
                     attributes.SetFromAttributes(x.Value.Description?.Tags);
@@ -557,7 +556,6 @@ namespace ModSettings.GUI
             if (ZNet.instance != null && ZNet.instance.IsClientInstance())
             {
                 ReflectionHelper.InvokePrivate(SynchronizationManager.Instance, "SynchronizeChangedConfig");
-                //SynchronizationManager.Instance.SynchronizeChangedConfig();
             }
         }
     }
