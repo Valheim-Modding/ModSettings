@@ -1,9 +1,9 @@
 ﻿{
-  "name": "JotunnModStub",
-  "description": "",
+  "name": "ModSettings",
+  "description": "Display and edit BepInEx' config via in-game GUI. Supports Jötunn ConfigSync and ServerSync.",
   "version_number": "0.0.1",
-  "website_url": "",
+  "website_url": "https://github.com/Valheim-Modding/ModSettings",
   "dependencies": [
-    "ValheimModding-Jotunn-2.6.1",
+    "ValheimModding-Jotunn-2.7.2",
   ]
 }
