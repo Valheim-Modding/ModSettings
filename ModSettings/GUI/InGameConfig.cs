@@ -68,22 +68,10 @@ namespace ModSettings.GUI
                 return;
             }
             
-            LoadDefaultLocalization();
             GUIManager.OnCustomGUIAvailable += LoadModSettingsPrefab;
             Main.Harmony.PatchAll(typeof(InGameConfig));
         }
-
-        /// <summary>
-        ///     Register Default localization
-        /// </summary>
-        private static void LoadDefaultLocalization()
-        {
-            Main.Localization.AddTranslation(MenuToken, "Mod Settings");
-            Main.Localization.AddTranslation(CancelToken, "Cancel");
-            Main.Localization.AddTranslation(OKToken, "OK");
-            Main.Localization.AddTranslation(KeybindToken, "Press a key");
-        }
-
+        
         /// <summary>
         ///     Load the mod settings prefab and apply Valheim style to it
         /// </summary>

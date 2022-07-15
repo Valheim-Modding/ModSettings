@@ -4,6 +4,6 @@
   "version_number": "0.0.1",
   "website_url": "https://github.com/Valheim-Modding/ModSettings",
   "dependencies": [
-    "ValheimModding-Jotunn-2.7.2",
+    "ValheimModding-Jotunn-2.7.2"
   ]
 }

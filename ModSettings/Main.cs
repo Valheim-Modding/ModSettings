@@ -5,8 +5,6 @@
 
 using BepInEx;
 using HarmonyLib;
-using Jotunn.Entities;
-using Jotunn.Managers;
 using ModSettings.GUI;
 
 namespace ModSettings
@@ -21,7 +19,6 @@ namespace ModSettings
         
         internal static Main Instance;
         internal static Harmony Harmony;
-        internal static CustomLocalization Localization = LocalizationManager.Instance.GetLocalization();
 
         private void Awake()
         {
@@ -31,4 +28,3 @@ namespace ModSettings
         }
     }
 }
-

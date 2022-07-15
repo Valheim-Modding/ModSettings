@@ -11,7 +11,7 @@ param(
 
     [Parameter(Mandatory)]
     [System.String]$ValheimPath,
-
+    
     [Parameter(Mandatory)]
     [System.String]$ProjectPath,
     
@@ -24,10 +24,13 @@ Push-Location -Path (Split-Path -Parent $MyInvocation.MyCommand.Path)
 # Test some preliminaries
 ("$TargetPath",
  "$ValheimPath",
- "$(Get-Location)\libraries"
+ "$ProjectPath"
 ) | % {
     if (!(Test-Path "$_")) {Write-Error -ErrorAction Stop -Message "$_ folder is missing"}
 }
+
+# Go
+Write-Host "Publishing for $Target from $TargetPath"
 
 # Plugin name without ".dll"
 $name = "$TargetAssembly" -Replace('.dll')
@@ -39,9 +42,7 @@ if (Test-Path -Path "$pdb") {
     Invoke-Expression "& `"$(Get-Location)\libraries\Debug\pdb2mdb.exe`" `"$TargetPath\$TargetAssembly`""
 }
 
-# Main Script
-Write-Host "Publishing for $Target from $TargetPath"
-
+# Debug copies the dll to Valheim
 if ($Target.Equals("Debug")) {
     if ($DeployPath.Equals("")){
       $DeployPath = "$ValheimPath\BepInEx\plugins"
@@ -51,19 +52,45 @@ if ($Target.Equals("Debug")) {
     Write-Host "Copy $TargetAssembly to $plug"
     Copy-Item -Path "$TargetPath\$name.dll" -Destination "$plug" -Force
     Copy-Item -Path "$TargetPath\$name.pdb" -Destination "$plug" -Force
+    Copy-Item -Path "$TargetPath\$name.xml" -Destination "$plug" -Force -ErrorAction SilentlyContinue
     Copy-Item -Path "$TargetPath\$name.dll.mdb" -Destination "$plug" -Force
+    Copy-Item -Path "$ProjectPath\assets\*" -Destination "$plug" -Recurse -Force -ErrorAction SilentlyContinue
 }
 
+# Release builds packages for ThunderStore and NexusMods
 if($Target.Equals("Release")) {
-    Write-Host "Packaging for ThunderStore..."
-    $Package="Package"
-    $PackagePath="$ProjectPath\$Package"
+    $package = "$ProjectPath\_package"
+    
+    Write-Host "Packaging for ThunderStore"
+    New-Item -Type Directory -Path "$package\Thunderstore" -Force
+    $thunder = New-Item -Type Directory -Path "$package\Thunderstore\package"
+    $thunder.CreateSubdirectory('plugins')
+    Copy-Item -Path "$TargetPath\$name.dll" -Destination "$thunder\plugins\"
+    Copy-Item -Path "$TargetPath\$name.pdb" -Destination "$thunder\plugins\"
+    Copy-Item -Path "$TargetPath\$name.xml" -Destination "$thunder\plugins\"
+    Copy-Item -Path "$TargetPath\$name.dll.mdb" -Destination "$thunder\plugins\"
+    Copy-Item -Path "$ProjectPath\assets\*" -Destination "$thunder\plugins\" -Recurse
+    Copy-Item -Path "$ProjectPath\..\README.md" -Destination "$thunder\README.md"
+    Copy-Item -Path "$ProjectPath\..\manifest.json" -Destination "$thunder\manifest.json"
+    Copy-Item -Path "$ProjectPath\..\icon.png" -Destination "$thunder\icon.png"
+    Remove-Item -Path "$package\Thunderstore\$name.zip" -Force
+    Invoke-Expression "& `"$(Get-Location)\libraries\7za.exe`" a `"$package\Thunderstore\$name.zip`" `"$thunder\*`""
+    $thunder.Delete($true)
 
-    Write-Host "$PackagePath\$TargetAssembly"
-    Copy-Item -Path "$TargetPath\$TargetAssembly" -Destination "$PackagePath\plugins\$TargetAssembly" -Force
-    Copy-Item -Path "$ProjectPath\README.md" -Destination "$PackagePath\README.md" -Force
-    Compress-Archive -Path "$PackagePath\*" -DestinationPath "$TargetPath\$TargetAssembly.zip" -Force
+    Write-Host "Packaging for NexusMods"
+    New-Item -Type Directory -Path "$package\Nexusmods" -Force
+    $nexus = New-Item -Type Directory -Path "$package\Nexusmods\package"
+    Copy-Item -Path "$TargetPath\$name.dll" -Destination "$nexus\"
+    Copy-Item -Path "$TargetPath\$name.pdb" -Destination "$nexus\"
+    Copy-Item -Path "$TargetPath\$name.xml" -Destination "$nexus\"
+    Copy-Item -Path "$TargetPath\$name.dll.mdb" -Destination "$nexus\"
+    Copy-Item -Path "$ProjectPath\assets\*" -Destination "$nexus\" -Recurse
+    Copy-Item -Path "$ProjectPath\..\README.md" -Destination "$nexus\README"
+    Remove-Item -Path "$package\Nexusmods\$name.zip" -Force
+    Invoke-Expression "& `"$(Get-Location)\libraries\7za.exe`" a `"$package\Nexusmods\$name.zip`" `"$nexus\*`""
+    $nexus.Delete($true)
 }
+
 
 # Pop Location
 Pop-Location
