@@ -1,5 +1,5 @@
-﻿# JotunnModStub
-Upon building for release, this README.md is copied into the `Package` folder for thunderstore packaging. Remember to also edit the manifest.json and supply your own mod icon.
+﻿# ModSettings
+Display and edit BepInEx' config via in-game GUI. Supports Jötunn ConfigSync and ServerSync.
 
 ## Installation (manual)
 
