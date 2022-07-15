@@ -1,14 +1,7 @@
-﻿# ModSettings
+﻿
+# ModSettings
 Display and edit BepInEx' config via in-game GUI. Supports Jötunn ConfigSync and ServerSync.
 
-## Installation (manual)
+![Settings Window](https://raw.githubusercontent.com/Valheim-Modding/ModSettings/master/ModSettings/ModSettings.png)
 
-
-## Features
-
-
-## Changelog
-
-
-## Known issues
-You can find the github at:
+Made with Löve and __[Jötunn](https://github.com/Valheim-Modding/Jotunn)__
